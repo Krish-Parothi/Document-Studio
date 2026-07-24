@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import { FileText, Wand2, Network, Settings } from "lucide-react";
 import "./globals.css";
-import styles from "./layout.module.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,38 +20,40 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className={styles.layout}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} font-sans antialiased bg-background text-foreground`}>
+        <div className="flex min-h-screen w-full">
           {/* Global Sidebar */}
-          <aside className={`${styles.sidebar} glass-panel fade-in`}>
-            <Link href="/" className={styles.brand}>
-              <div className={styles.logo}>DS</div>
-              <span className={styles.brandName}>Document Studio</span>
+          <aside className="w-[260px] flex flex-col p-6 border-r bg-muted/30">
+            <Link href="/" className="flex items-center gap-3 mb-10 transition-opacity hover:opacity-80">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                DS
+              </div>
+              <span className="font-semibold text-lg tracking-tight">Document Studio</span>
             </Link>
             
-            <nav className={styles.nav}>
-              <Link href="/" className={styles.navItem}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <nav className="flex flex-col gap-2">
+              <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground font-medium transition-colors hover:bg-muted hover:text-foreground">
+                <FileText className="w-5 h-5" />
                 Documents
               </Link>
-              <Link href="/generate" className={styles.navItem}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <Link href="/generate" className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground font-medium transition-colors hover:bg-muted hover:text-foreground">
+                <Wand2 className="w-5 h-5" />
                 Generate Document
               </Link>
-              <Link href="#" className={styles.navItem}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+              <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground font-medium transition-colors hover:bg-muted hover:text-foreground">
+                <Network className="w-5 h-5" />
                 Agent Workflows
               </Link>
-              <Link href="#" className={styles.navItem}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground font-medium transition-colors hover:bg-muted hover:text-foreground">
+                <Settings className="w-5 h-5" />
                 Settings
               </Link>
             </nav>
           </aside>
 
           {/* Main Content Area */}
-          <main className={styles.main}>
+          <main className="flex-1 flex flex-col bg-background relative">
             {children}
           </main>
         </div>
