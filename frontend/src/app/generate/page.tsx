@@ -1,6 +1,12 @@
+'use client';
+
 import styles from "./generate.module.css";
+import { useState } from "react";
 
 export default function GeneratePage() {
+  const [copyHovered, setCopyHovered] = useState(false);
+  const [saveHovered, setSaveHovered] = useState(false);
+
   return (
     <div className={`${styles.container} fade-in`}>
       {/* Chat / Prompt Area */}
@@ -76,8 +82,8 @@ export default function GeneratePage() {
             NDA_Document_Studio_Acme.md
           </div>
           <div style={{ display: "flex", gap: "0.75rem" }}>
-            <button className="btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: "0.875rem", fontWeight: 500, borderRadius: "0.5rem", transition: "all 150ms" }} onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-1px)"} onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0)"}>📋 Copy</button>
-            <button className="btn-primary" style={{ padding: "0.5rem 1rem", fontSize: "0.875rem", fontWeight: 500, borderRadius: "0.5rem", transition: "all 150ms" }} onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-1px)"} onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0)"}>💾 Save</button>
+            <button className="btn-secondary" style={{ padding: "0.5rem 1rem", fontSize: "0.875rem", fontWeight: 500, borderRadius: "0.5rem", transition: "all 150ms", transform: copyHovered ? "translateY(-1px)" : "translateY(0)" }} onMouseEnter={() => setCopyHovered(true)} onMouseLeave={() => setCopyHovered(false)}>📋 Copy</button>
+            <button className="btn-primary" style={{ padding: "0.5rem 1rem", fontSize: "0.875rem", fontWeight: 500, borderRadius: "0.5rem", transition: "all 150ms", transform: saveHovered ? "translateY(-1px)" : "translateY(0)" }} onMouseEnter={() => setSaveHovered(true)} onMouseLeave={() => setSaveHovered(false)}>💾 Save</button>
           </div>
         </div>
         <div className={styles.artifactContent}>
