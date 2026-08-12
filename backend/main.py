@@ -86,6 +86,7 @@ def generate_document_endpoint(request: DocumentRequest):
 def download_document(file_name: str):
     """Download a generated document file."""
     from utils.file_manager import get_file_path
+    import threading
 
     try:
         file_path = get_file_path(file_name)
@@ -93,14 +94,19 @@ def download_document(file_name: str):
         if not os.path.exists(file_path):
             raise HTTPException(status_code=404, detail="File not found")
 
-        def cleanup():
+        def cleanup_after_download():
+            import time
+            time.sleep(1)
             cleanup_file(file_path)
+
+        # Schedule cleanup in background thread instead of async
+        thread = threading.Thread(target=cleanup_after_download, daemon=True)
+        thread.start()
 
         return FileResponse(
             path=file_path,
             media_type="application/octet-stream",
-            filename=file_name,
-            background=cleanup
+            filename=file_name
         )
 
     except HTTPException:
