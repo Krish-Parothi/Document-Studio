@@ -118,7 +118,7 @@ a:hover {
 }
 
 .btn-primary {
-  background-color: var(--accent-primary);
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
   color: #ffffff;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -126,13 +126,16 @@ a:hover {
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
@@ -148,6 +151,8 @@ a:hover {
 
 .btn-secondary:hover {
   background-color: var(--bg-tertiary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .flex-center {
@@ -161,8 +166,139 @@ a:hover {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Tailwind animations */
+@layer utilities {
+  .animate-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .slide-in-from-top-2 {
+    animation: slideInFromTop 0.5s ease-out 100ms both;
+  }
+
+  .slide-in-from-top-4 {
+    animation: slideInFromTop 0.5s ease-out 200ms both;
+  }
+
+  .slide-in-from-top-6 {
+    animation: slideInFromTop 0.5s ease-out 300ms both;
+  }
+
+  .slide-in-from-top-8 {
+    animation: slideInFromTop 0.5s ease-out 400ms both;
+  }
+
+  .slide-in-from-bottom-2 {
+    animation: slideInFromBottom 0.5s ease-out 100ms both;
+  }
+
+  .slide-in-from-bottom-4 {
+    animation: slideInFromBottom 0.5s ease-out 200ms both;
+  }
+
+  .slide-in-from-bottom-8 {
+    animation: slideInFromBottom 0.5s ease-out 400ms both;
+  }
+
+  .slide-in-from-left-2 {
+    animation: slideInFromLeft 0.5s ease-out 100ms both;
+  }
+
+  .slide-in-from-right-2 {
+    animation: slideInFromRight 0.5s ease-out 100ms both;
+  }
+
+  .duration-500 {
+    animation-duration: 0.5s;
+  }
+
+  .duration-700 {
+    animation-duration: 0.7s;
+  }
+
+  .duration-900 {
+    animation-duration: 0.9s;
+  }
+
+  .glow {
+    animation: glow 2s ease-in-out infinite;
+  }
 }
 
 @layer base {
