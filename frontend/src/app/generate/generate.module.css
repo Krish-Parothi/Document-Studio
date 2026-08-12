@@ -76,6 +76,11 @@
   background-color: var(--bg-primary);
 }
 
+.parametersArea {
+  padding: 0 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
 .inputWrapper {
   display: flex;
   align-items: flex-end;
