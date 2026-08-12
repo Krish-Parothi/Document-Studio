@@ -6,7 +6,7 @@ from config.settings import settings
 
 
 llm = ChatGroq(
-    model="mixtral-8x7b-32768",
+    model="openai/gpt-oss-120b",
     temperature=0.7,
     api_key=settings.groq_api_key
 )
