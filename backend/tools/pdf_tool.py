@@ -1,8 +1,9 @@
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Table, TableStyle
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_JUSTIFY
+from reportlab.lib import colors
 import re
 
 
@@ -37,31 +38,106 @@ def generate_pdf(content: str, style_params: dict, file_path: str) -> str:
         leading=font_size * line_spacing,
     )
 
-    title_style = ParagraphStyle(
-        "CustomTitle",
+    heading1_style = ParagraphStyle(
+        "CustomHeading1",
         parent=styles["Heading1"],
         fontName=_get_font_name(font_family),
-        fontSize=font_size + 6,
+        fontSize=font_size + 8,
         textColor=_hex_to_rgb(text_color),
         alignment=TA_CENTER,
         spaceAfter=12,
+        spaceBeforе=12,
+        fontBold=True,
     )
 
-    paragraphs = content.split("\n\n")
+    heading2_style = ParagraphStyle(
+        "CustomHeading2",
+        parent=styles["Heading2"],
+        fontName=_get_font_name(font_family),
+        fontSize=font_size + 4,
+        textColor=_hex_to_rgb(text_color),
+        alignment=TA_LEFT,
+        spaceAfter=10,
+        spaceBefore=10,
+        fontBold=True,
+    )
 
-    for i, paragraph in enumerate(paragraphs):
-        if not paragraph.strip():
-            continue
+    # Clean and parse content
+    content = _clean_content(content)
+    sections = _parse_sections(content)
 
-        if i == 0:
-            story.append(Paragraph(paragraph.strip(), title_style))
-        else:
-            story.append(Paragraph(paragraph.strip(), normal_style))
-
-        story.append(Spacer(1, 0.2*inch))
+    for section in sections:
+        if section["type"] == "title":
+            story.append(Paragraph(section["content"], heading1_style))
+            story.append(Spacer(1, 0.2*inch))
+        elif section["type"] == "heading":
+            story.append(Paragraph(section["content"], heading2_style))
+            story.append(Spacer(1, 0.15*inch))
+        elif section["type"] == "paragraph":
+            if section["content"].strip():
+                story.append(Paragraph(section["content"], normal_style))
+                story.append(Spacer(1, 0.1*inch))
+        elif section["type"] == "list_item":
+            bullet_text = f"• {section['content']}"
+            story.append(Paragraph(bullet_text, normal_style))
+            story.append(Spacer(1, 0.05*inch))
+        elif section["type"] == "page_break":
+            story.append(PageBreak())
 
     doc.build(story)
     return file_path
+
+
+def _clean_content(content: str) -> str:
+    """Clean markdown-style content for better PDF rendering."""
+    # Remove markdown headers
+    content = re.sub(r'^#+\s+', '', content, flags=re.MULTILINE)
+    # Remove bold/italic markdown
+    content = re.sub(r'\*\*([^*]+)\*\*', r'\1', content)
+    content = re.sub(r'\*([^*]+)\*', r'\1', content)
+    content = re.sub(r'__([^_]+)__', r'\1', content)
+    content = re.sub(r'_([^_]+)_', r'\1', content)
+    # Remove markdown code blocks
+    content = re.sub(r'```[\s\S]*?```', '', content)
+    # Remove inline code ticks
+    content = re.sub(r'`([^`]+)`', r'\1', content)
+    # Remove markdown links
+    content = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', content)
+    # Remove HTML comments
+    content = re.sub(r'<!--[\s\S]*?-->', '', content)
+    # Remove multiple spaces
+    content = re.sub(r' +', ' ', content)
+    return content.strip()
+
+
+def _parse_sections(content: str) -> list:
+    """Parse content into structured sections."""
+    sections = []
+    lines = content.split('\n')
+
+    is_first = True
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        # First non-empty line is title
+        if is_first:
+            sections.append({"type": "title", "content": line})
+            is_first = False
+            continue
+
+        # Detect headings by common keywords
+        if any(line.lower().startswith(h) for h in ["summary", "overview", "introduction", "background", "methodology", "results", "conclusion", "recommendations"]):
+            sections.append({"type": "heading", "content": line})
+        # Detect list items
+        elif line.startswith(('•', '-', '*', '>')):
+            sections.append({"type": "list_item", "content": line.lstrip('•-*> ')})
+        # Regular paragraph
+        else:
+            sections.append({"type": "paragraph", "content": line})
+
+    return sections
 
 
 def _get_font_name(font_family: str) -> str:
