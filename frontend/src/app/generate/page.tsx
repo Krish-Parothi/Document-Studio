@@ -3,6 +3,12 @@
 import styles from "./generate.module.css";
 import { useState } from "react";
 
+interface ChatMessage {
+  id: string;
+  role: "user" | "ai";
+  content: string;
+}
+
 export default function GeneratePage() {
   const [copyHovered, setCopyHovered] = useState(false);
   const [saveHovered, setSaveHovered] = useState(false);
@@ -34,10 +40,17 @@ export default function GeneratePage() {
             <div className={styles.avatar}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </div>
-            <div className={styles.messageContent}>
-              Can you draft a Non-Disclosure Agreement for a new software project? It should be between Document Studio Inc. and Acme Corp.
+          ))}
+          {isLoading && (
+            <div className={`${styles.message} ${styles.ai}`}>
+              <div className={styles.avatar}>
+                <Loader2 className="h-5 w-5 animate-spin" />
+              </div>
+              <div className={styles.messageContent}>Generating document...</div>
             </div>
-          </div>
+          )}
+          <div ref={chatEndRef} />
+        </div>
 
           {/* Example AI Response */}
           <div className={`${styles.message} ${styles.ai}`}>
@@ -65,6 +78,10 @@ export default function GeneratePage() {
               className={styles.textarea}
               placeholder="Ask the agent to generate or modify a document... (e.g., 'Draft an employment contract', 'Summarize this document')"
               rows={1}
+              value={input}
+              onChange={handleTextareaChange}
+              onKeyDown={handleKeyDown}
+              disabled={isLoading || !isConnected}
             />
             <button className={styles.sendButton} title="Send message">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -74,7 +91,7 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* Artifact / Document View Area */}
+      {/* Document View Area */}
       <div className={styles.artifactArea}>
         <div className={styles.artifactHeader}>
           <div className={styles.artifactTitle}>

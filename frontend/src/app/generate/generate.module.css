@@ -125,6 +125,11 @@
   background: linear-gradient(180deg, rgba(24, 24, 27, 0.6) 0%, rgba(18, 18, 23, 0.8) 100%);
 }
 
+.parametersArea {
+  padding: 0 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
 .inputWrapper {
   display: flex;
   align-items: flex-end;
