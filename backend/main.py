@@ -3,9 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
 from models.requests import DocumentRequest, DocumentResponse, HealthCheckResponse, StyleParams
-from agents.document_agent import generate_document
 from utils.file_manager import cleanup_file
-from config.settings import settings
 
 app = FastAPI(title="Document Studio API", version="1.0.0")
 
@@ -27,6 +25,7 @@ def read_root():
 def health_check():
     """Health check endpoint with Groq connectivity test."""
     try:
+        from config.settings import settings
         from langchain_groq import ChatGroq
         from langchain_core.messages import HumanMessage
 
@@ -50,6 +49,8 @@ def health_check():
 def generate_document_endpoint(request: DocumentRequest):
     """Generate a document based on user prompt and parameters."""
     try:
+        from agents.document_agent import generate_document
+
         style_params = request.style_params.dict() if request.style_params else {}
 
         result = generate_document(
